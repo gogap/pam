@@ -11,7 +11,7 @@ $ go get github.com/gogap/pam
 
 ### USE
 
-```golang
+```go
 package main
 
 import (
