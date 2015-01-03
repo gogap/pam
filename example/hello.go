@@ -2,9 +2,9 @@ package main
 
 import (
 	"io"
-	"log"
 	"net/http"
 
+	"github.com/go-martini/martini"
 	"github.com/gogap/pam"
 )
 
@@ -14,13 +14,13 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	m := pam.New("hello")
+	m := martini.Classic()
 
-	m.Post("gogap.hello.test", http.HandlerFunc(HelloServer))
+	apiMux := pam.New("hello")
+	apiMux.Post("gogap.hello.test", http.HandlerFunc(HelloServer))
 
-	http.Handle("/", m)
-	err := http.ListenAndServe(":12345", nil)
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
-	}
+	m.Post("/hello", apiMux.APIMatcher())
+	m.Get("/hello", func() string { return "GET from func" })
+
+	m.Run()
 }

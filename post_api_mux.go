@@ -3,6 +3,8 @@ package pam
 import (
 	"net/http"
 	"strings"
+
+	"github.com/go-martini/martini"
 )
 
 const (
@@ -25,6 +27,15 @@ type PostAPIMux struct {
 
 func New(appName string) *PostAPIMux {
 	return &PostAPIMux{appName: appName, handlers: make(map[string][]*apiHandler)}
+}
+
+//APIMatcher is for martini
+func (p *PostAPIMux) APIMatcher() martini.Handler {
+	return p.ServeHTTP
+}
+
+func (p *PostAPIMux) AppName() string {
+	return p.appName
 }
 
 func (p *PostAPIMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
